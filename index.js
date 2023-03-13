@@ -4,13 +4,8 @@ const mongoose = require('mongoose')
 
 // CONFIG
 require('dotenv').config()
+const PORT = process.env.PORT
 const app = express()
-
-
-// Express Settings
-app.engine('jsx', require('express'))
-app.use(express.static('public'))
-app.use(express.urlencoded({ extended: true }))
 
 
 mongoose.connect(process.env.MONGO_URI,
@@ -23,17 +18,21 @@ mongoose.connect(process.env.MONGO_URI,
         console.error('Error connecting to MongoDB:', err);
     });
 
+// MIDDLEWARE
+app.use(express.urlencoded({ extended: true }))
+
+// CONTROLLERS
+const bookController = require('./controllers/books-controller.js')
+app.use('/books', bookController)
+
 // INDEX   
 app.get('/', (req, res) => {
-    res.send('Hello world!')
+    res.send('Books API project')
 })
-
-// BOOKS
-const booksController = require('./controllers/books-controller.js')
-app.use('/books', booksController)
 
 app.get('*', (req, res) => {
     res.render('error404')
 })
 
+// LISTEN
 app.listen(process.env.PORT)

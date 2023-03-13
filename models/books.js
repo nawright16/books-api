@@ -1,12 +1,15 @@
 const mongoose = require('mongoose')
+const { Schema } = mongoose
 
-const bookSchema = new mongoose.Schema({
-    title: { type: String},
-    description: {type: String},
+// SCHEMA
+const bookSchema = new Schema({
+    title: { type: String, required: true},
+    description: {type: String, default: false},
     year: {type: Number},
     quantity: { type: Number},
     imageURL: { type: String}
 
 })
 
-module.exports = mongoose.models
+const Book = mongoose.model('Book', bookSchema)
+module.exports = Book

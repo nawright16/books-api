@@ -1,10 +1,8 @@
-const router = require('express').Router()
-const express = require('express')
-const books = express.Router()
-const Book = require('../models/books.js')
+const books = require('express').Router()
+const db = require('../models')
 
 books.get('/seed', (req, res) => {
-    Book.insertMany([{
+    db.Book.insertMany([{
         "title": "The Shinobi Initiative",
         "description": "The reality-bending adventures of a clandestine service agency in the year 2166",
         "year": 2014,
@@ -41,10 +39,10 @@ books.get('/seed', (req, res) => {
 })
 
 // INDEX
-router.get('/', (req, res) => {
-    router.find()
+books.get('/', (req, res) => {
+    db.Book.find()
         .then(foundBooks => {
-            res.json('show', {
+            res.json( {
                 books: foundBooks,
                 title: 'Index Page'
             })
@@ -55,11 +53,11 @@ router.get('/', (req, res) => {
 })
 
 // SHOW
-router.get('/:id', (req, res) => {
-    Book.findById(req.params.id)
+books.get('/:id', (req, res) => {
+    db.Book.findById(req.params.id)
         .populate('book')
         .then(foundBook => {
-            res.json('show', {
+            res.json({
                 book: foundBook
             })
         })
@@ -70,14 +68,14 @@ router.get('/:id', (req, res) => {
 
 // CREATE
 books.post('/', (req, res) => {
-    Book.create(req.body)
+    db.Book.create(req.body)
     res.redirect('/books')
 })
 
 // UPDATE
 books.put('/:id', (req, res) => {
 
-    Book.findByIdAndUpdate(req.params.id, req.body)
+    db.Book.findByIdAndUpdate(req.params.id, req.body)
         .then(updatedBook => {
             res.json(`/books/${req.params.id}`)
         })
@@ -85,7 +83,7 @@ books.put('/:id', (req, res) => {
 
 // DELETE
 books.delete('/:id', (req, res) => {
-    Book.findByIdAndDelete(req.params.id)
+    db.Book.findByIdAndDelete(req.params.id)
         .then(deletedBook => { res.status(303).redirect('/books') })
 
 })
